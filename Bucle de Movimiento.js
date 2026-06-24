@@ -7,7 +7,7 @@ Adenmas se crea una constante de velocidad para cada frame
 
 // VARIABLES GLOBALES
 
-export let posicion = {x:800, y: 450};
+export let posicion = {x:800, y: 450, radio: 15};
 const VELOCIDAD = 5;
 
 //CAPTURA DE MOVIMIENTOS (FUNCION ENCARGADA DE DETECTAR CUANDO UNA TECLA ES PRESIONADA)
@@ -37,24 +37,12 @@ window.addEventListener('keyup',(evento) => {
 
 
 //LOGICA MATEMATICA PARA QUE HAGA EL MOVIMIENTO
-
-export function actualizarPosicion(){
-
-    if(teclas.w){
-        posicion.y -= VELOCIDAD
-    }
-
-    if(teclas.s){
-        posicion.y += VELOCIDAD
-    }
-
-    if(teclas.a){
-        posicion.x -= VELOCIDAD
-    }
-
-    if(teclas.d){
-        posicion.x += VELOCIDAD
-    }
+const RADIO_JUGADOR = 15;
+export function actualizarPosicion() {
+    if(teclas.w) posicion.y -= VELOCIDAD;
+    if(teclas.s) posicion.y += VELOCIDAD;
+    if(teclas.a) posicion.x -= VELOCIDAD;
+    if(teclas.d) posicion.x += VELOCIDAD;
 }
 
 //BUCLE (Funcion para actualizar los valores del personaje)

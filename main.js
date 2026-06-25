@@ -1,7 +1,13 @@
-// Importamos las herramientas de sus respectivos archivos
-import { dibujarCirculo, dibujarObjeto, dibujarRectangulo } from './ventana.js';
-import { posicion, actualizarPosicion } from './Bucle de Movimiento.js';
+import { dibujarMundo, dibujarObjeto, dibujarRectangulo, dibujarCirculo } from './ventana.js';
+import { posicion, actualizarFisicas, camara } from './movimiento.js';
+import { Enemigo } from './enemigo.js';
+import { BarraDeVida } from './vida.js';
 import { detectarColisionCirculo, detectarColisionRectangulo, calcularRebote, calcularReboteRectangulo } from './colisiones.js';
+
+const canvas = document.getElementById("pantallaJuego");
+
+const ctx = canvas.getContext('2d');
+
 const objetoPrueba = {
     x: 400,
     y: 300,
@@ -13,13 +19,24 @@ const rectanguloPrueba = {
     ancho: 80,
     alto: 50
 };
-// El Bucle Principal
+
+// Enemigos de ejemplo
+const enemigos = [
+    new Enemigo(200, 200, 20, '#ff5555', 1.2, 10),
+    new Enemigo(1100, 400, 18, '#aa33ff', 0.9, 8)
+];
+
+// Barra de vida en pantalla (coordenadas en pantalla) — más grande para visibilidad
+const barra = new BarraDeVida(100, 10, 10, 300, 30);
+
 function enCadaFrame(){
-    // 1. Calculamos la nueva posición matemática
-    
-    actualizarPosicion();
+    // actualizar físicas y cámara
+    actualizarFisicas(canvas);
+
+    // detectar colisiones
     const choqueCirculo = detectarColisionCirculo(posicion, objetoPrueba);
     const choqueRectangulo = detectarColisionRectangulo(posicion, rectanguloPrueba);
+
     if (choqueCirculo) {
         const nuevaPosicion = calcularRebote(posicion, objetoPrueba);
         posicion.x = nuevaPosicion.x;
@@ -30,27 +47,31 @@ function enCadaFrame(){
         posicion.x = nuevaPosicion.x;
         posicion.y = nuevaPosicion.y;
     }
-    // 2. Dibujamos el círculo usando esos números matemáticos
-    dibujarCirculo(posicion.x, posicion.y);
+
+    // dibujado
+    dibujarMundo(posicion.x, posicion.y);
     dibujarObjeto(objetoPrueba, choqueCirculo ? "green" : "red");
     dibujarRectangulo(rectanguloPrueba, choqueRectangulo ? 'green' : 'red');
-// main.js
-import { dibujarMundo } from './ventana.js';
-import { posicion, actualizarFisicas } from './movimiento.js'; // <-- Importamos del nuevo archivo
 
-const canvas = document.getElementById("pantallaJuego");
+    // actualizar y dibujar enemigos
+    enemigos.forEach(e => {
+        e.actualizar(posicion);
+        e.dibujar(ctx, camara);
 
-// El Bucle Principal
-function enCadaFrame(){
-    // 1. Calculamos la nueva posición del personaje Y de la cámara
-    actualizarFisicas(canvas);
+        // daño por contacto con cooldown (600ms)
+        if (detectarColisionCirculo(posicion, e)) {
+            const now = Date.now();
+            if (!e.lastHitTime || now - e.lastHitTime > 600) {
+                barra.recibirDano(e.daño);
+                e.lastHitTime = now;
+            }
+        }
+    });
 
-    // 2. Dibujamos todo el escenario usando las posiciones actualizadas
-    dibujarMundo(posicion.x, posicion.y);
+    // dibujar HUD (barra de vida)
+    barra.dibujar(ctx);
 
-    // 3. Repetimos el ciclo sin parar
     requestAnimationFrame(enCadaFrame);
 }
 
-// Arrancamos el motor
 enCadaFrame();

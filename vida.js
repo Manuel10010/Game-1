@@ -29,6 +29,12 @@ export class BarraDeVida {
 
     // Esta función dibuja la barra usando el contexto del canvas
     dibujar(ctx) {
+        // Guardamos/restauramos estado para evitar interferencias con transformaciones
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = 'source-over';
+
         // 1. Dibujar el fondo de la barra (Gris oscuro)
         ctx.fillStyle = '#7f8c8d';
         ctx.fillRect(this.x, this.y, this.ancho, this.alto);
@@ -50,5 +56,13 @@ export class BarraDeVida {
         ctx.strokeStyle = '#000000';
         ctx.lineWidth = 4;
         ctx.strokeRect(this.x, this.y, this.ancho, this.alto);
+
+        // 6. Mostrar porcentaje como texto para ver la barra claramente
+        ctx.fillStyle = '#000000';
+        ctx.font = '14px sans-serif';
+        const porcentajeTexto = Math.round((this.vidaActual / this.vidaMaxima) * 100);
+        ctx.fillText(porcentajeTexto + '%', this.x + 6, this.y + this.alto - 6);
+
+        ctx.restore();
     }
 }

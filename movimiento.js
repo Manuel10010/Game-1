@@ -1,6 +1,6 @@
 
-export let posicion = { x: 800, y: 450 }; 
-export let camara = { x: 0, y: 0 };       
+export let posicion = { x: 800, y: 450, radio: 15 };
+export let camara = { x: 0, y: 0 };
 
 const VELOCIDAD = 5;
 

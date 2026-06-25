@@ -1,14 +1,30 @@
+
+import { camara } from './movimiento.js'; 
+
 const canvas = document.getElementById("pantallaJuego");
 const pincel = canvas.getContext("2d");
 const radio = 15;
 
-export function dibujarCirculo(x,y){
-    pincel.clearRect(0, 0, canvas.width, canvas.height); 
+export function dibujarMundo(xJugador, yJugador) {
+    
+    pincel.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Instrucciones de dibujo
+    let xObjetoMundo = 900; 
+    let yObjetoMundo = 500; 
+
+    pincel.fillStyle = "red"; 
+    pincel.fillRect(xObjetoMundo - camara.x, yObjetoMundo - camara.y, 50, 50);
+
+
+    
     pincel.beginPath();
-    pincel.arc(x, y, radio, 0, Math.PI * 2); // Crea el trazado del círculo
-    pincel.fillStyle = "black"; // Color de relleno
-    pincel.fill(); // Rellena el círculo
+    
+
+    let xPantalla = xJugador - camara.x;
+    let yPantalla = yJugador - camara.y;
+
+    pincel.arc(xPantalla, yPantalla, radio, 0, Math.PI * 2); 
+    pincel.fillStyle = "black"; 
+    pincel.fill(); 
     pincel.closePath();
 }

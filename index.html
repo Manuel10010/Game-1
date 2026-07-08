@@ -1,25 +1,89 @@
 <!DOCTYPE html>
-<html lang = "es">
+<html lang="es">
     <head>
         <meta charset="UTF-8">
         <title>Prototipo - Círculo</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-        }
-        canvas {
-            background-color: rgb(255, 255, 255); 
-            border: 2px solid #000000;
-        }
-    </style>
+        <style>
+            /* --- ESTILOS GENERALES (Los que ya tenías) --- */
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                background-color: #f0f0f0;
+                margin: 0;
+            }
+            
+            /* --- CONTENEDOR PRINCIPAL --- */
+            /* Envuelve al canvas y al inventario para mantenerlos juntos */
+            #contenedor-juego {
+                position: relative;
+                box-shadow: 0px 10px 30px rgba(0,0,0,0.5); /* Sombra estética */
+            }
+
+            /* --- ESTILOS DEL CANVAS --- */
+            canvas {
+                background-color: rgb(255, 255, 255); 
+                border: 2px solid #000000;
+                display: block; /* Elimina un pequeño margen invisible debajo del canvas */
+            }
+
+            /* --- ESTILOS DEL INVENTARIO --- */
+            #panel-inventario {
+                position: absolute;
+                bottom: 20px; /* Separación desde la base del canvas */
+                left: 50%;
+                transform: translateX(-50%); /* Centrado horizontal perfecto */
+                display: flex;
+                gap: 10px;
+                background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro transparente */
+                padding: 10px;
+                border-radius: 10px;
+            }
+
+            /* Estilo individual de cada cuadro del inventario */
+            .casilla-inventario {
+                width: 64px;
+                height: 64px;
+                background-color: #333;
+                border: 2px solid #fff;
+                border-radius: 5px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                color: white;
+                font-family: sans-serif;
+                font-size: 11px;
+                cursor: pointer;
+                text-align: center;
+                transition: transform 0.1s; /* Animación fluida */
+            }
+
+            /* Efecto al pasar el mouse por encima */
+            .casilla-inventario:hover {
+                transform: scale(1.1); 
+                background-color: #555;
+            }
+
+            /* Estilos para las imágenes Base64 de tus plantas/hongos */
+            .casilla-inventario img {
+                width: 32px;
+                height: 32px;
+                image-rendering: pixelated; /* Mantiene los píxeles nítidos, ideal para tu arte */
+                margin-bottom: 4px;
+            }
+        </style>
     </head>
     <body>
-        <canvas id="pantallaJuego" width="1600" height="900"></canvas>
+        
+        <div id="contenedor-juego">
+            
+            <canvas id="pantallaJuego" width="1600" height="900"></canvas>
+            
+            <div id="panel-inventario"></div>
+            
+        </div>
 
         <script type="module" src="main.js"></script>
     </body>

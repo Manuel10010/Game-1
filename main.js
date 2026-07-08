@@ -29,6 +29,63 @@ const enemigos = [
 // Barra de vida en pantalla (coordenadas en pantalla) — más grande para visibilidad
 const barra = new BarraDeVida(100, 10, 10, 300, 30);
 
+const objetosInteractivos = [
+    { x: 260, y: 220, radio: 24, color: '#2ecc71', nombre: 'Cura', tipo: 'curar', mensaje: '¡Tomaste una planta curativa!', efecto: 'Vida +20', consumido: false },
+    { x: 980, y: 420, radio: 24, color: '#e74c3c', nombre: 'Veneno', tipo: 'veneno', mensaje: '¡Cuidado! Tocaste un veneno.', efecto: 'Vida -15', consumido: false },
+    { x: 700, y: 650, radio: 26, color: '#9b59b6', nombre: 'Alucinógeno', tipo: 'alucinogeno', mensaje: '¡Has consumido un alucinógeno!', efecto: 'Estás alucinando', consumido: false }
+];
+
+function agregarMensaje(texto) {
+    console.log(`${new Date().toLocaleTimeString()} - ${texto}`);
+}
+
+function dibujarObjetosInteractivos() {
+    objetosInteractivos.forEach(obj => {
+        if (obj.consumido) return;
+
+        ctx.beginPath();
+        ctx.arc(obj.x - camara.x, obj.y - camara.y, obj.radio, 0, Math.PI * 2);
+        ctx.fillStyle = obj.color;
+        ctx.fill();
+
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#111';
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.fillStyle = '#111';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(obj.nombre, obj.x - camara.x, obj.y - camara.y + 4);
+    });
+}
+
+function procesarObjetosInteractivos() {
+    objetosInteractivos.forEach(obj => {
+        if (obj.consumido) return;
+
+        if (detectarColisionCirculo(posicion, obj)) {
+            obj.consumido = true;
+
+            switch (obj.tipo) {
+                case 'curar':
+                    barra.curar(20);
+                    break;
+                case 'veneno':
+                    barra.recibirDano(15);
+                    break;
+                case 'alucinogeno':
+                    agregarMensaje('El jugador está alucinando...');
+                    break;
+            }
+
+            agregarMensaje(`[${obj.nombre}] ${obj.mensaje} (${obj.efecto})`);
+        }
+    });
+}
+
+agregarMensaje('Prototipo cargado. Toca los objetos para ver los efectos.');
+
 function enCadaFrame(){
     // actualizar físicas y cámara
     actualizarFisicas(canvas);
@@ -48,10 +105,13 @@ function enCadaFrame(){
         posicion.y = nuevaPosicion.y;
     }
 
+    procesarObjetosInteractivos();
+
     // dibujado
     dibujarMundo(posicion.x, posicion.y);
     dibujarObjeto(objetoPrueba, choqueCirculo ? "green" : "red");
     dibujarRectangulo(rectanguloPrueba, choqueRectangulo ? 'green' : 'red');
+    dibujarObjetosInteractivos();
 
     // actualizar y dibujar enemigos
     enemigos.forEach(e => {

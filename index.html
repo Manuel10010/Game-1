@@ -1,26 +1,38 @@
 <!DOCTYPE html>
-<html lang = "es">
-    <head>
-        <meta charset="UTF-8">
-        <title>Prototipo - Círculo</title>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prototipo - Círculo</title>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-        }
-        canvas {
-            background-color: rgb(255, 255, 255); 
-            border: 2px solid #000000;
-        }
-    </style>
-    </head>
-    <body>
-        <canvas id="pantallaJuego" width="1600" height="900"></canvas>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
 
-        <script type="module" src="main.js"></script>
-    </body>
+      .contenedor {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      canvas {
+        background-color: rgb(255, 255, 255);
+        border: 2px solid #000000;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="contenedor">
+      <canvas id="pantallaJuego" width="1600" height="900"></canvas>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+  </body>
 </html>
